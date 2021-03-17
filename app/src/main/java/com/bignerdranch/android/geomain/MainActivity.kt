@@ -19,22 +19,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var previousButton: Button
     private lateinit var questionTextView: TextView
-    private val questionBank = listOf(
-            Question(R.string.question_australia, true),
-            Question(R.string.question_oceans, true),
-            Question(R.string.question_mideast, false),
-            Question(R.string.question_africa, false),
-            Question(R.string.question_americas, true),
-            Question(R.string.question_asia, true))
-    private var currentIndex = 0
+
+    private val quizViewModel: QuizViewModel by viewModels() //new style of ViewModels
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
 
-        val quizVM : QuizViewModel by viewModels()
-        Log.d(TAG, "Got a quizVM: $quizVM")
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -53,17 +45,17 @@ class MainActivity : AppCompatActivity() {
             falseButton.isClickable = false
         }
         questionTextView.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
         }
         nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
             trueButton.isClickable = true
             falseButton.isClickable = true
         }
         previousButton.setOnClickListener {
-            currentIndex = (questionBank.size + currentIndex - 1) % questionBank.size
+            quizViewModel.moveToPrevious()
             updateQuestion()
         }
         updateQuestion()
@@ -96,11 +88,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].textResId
+        val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
     }
     private fun checkAnswer(userAnswer: Boolean){
-        val correctAnswer = questionBank[currentIndex].answer
+        val correctAnswer = quizViewModel.currentQuestionAnswer
         val messageResId = if (userAnswer == correctAnswer){
             R.string.correct_toast
         } else {
