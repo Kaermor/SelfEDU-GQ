@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 
 
 private const val TAG = "MainActivity"
+private const val KEY_INDEX = "index" //key for the key-value pair that will be stored in the bundle
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +27,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
+
+        /*Finally, in onCreate(Bundle?), check for this value. If it exists, assign it
+        to currentIndex. If a value with the key "index"does not exist in the bundle, or
+        if the bundle object is null, set the value to 0.*/
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        quizViewModel.currentIndex = currentIndex
 
 
         trueButton = findViewById(R.id.true_button)
@@ -75,6 +82,14 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "onPause() called")
+    }
+
+    //override onSaveInstanceState(Bundle)to write the value of currentIndex to the bundle with
+    //the constant as its key
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.i(TAG, "onSaveInstanceState")
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
     }
 
     override fun onStop() {
