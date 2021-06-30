@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var nextButton: Button
     private lateinit var previousButton: Button
+    private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
 
     private val quizViewModel: QuizViewModel by viewModels() //new style of ViewModels
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         previousButton = findViewById(R.id.previous_button)
+        cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
 
         trueButton.setOnClickListener { view: View ->
@@ -64,6 +66,9 @@ class MainActivity : AppCompatActivity() {
         previousButton.setOnClickListener {
             quizViewModel.moveToPrevious()
             updateQuestion()
+        }
+        cheatButton.setOnClickListener {
+            //Start CheatActivity
         }
         updateQuestion()
 
